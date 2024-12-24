@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
                 icon: Icons.person,
                 onTap: () {
                   setState(() {
-                    _selectedIndex = 4;
+                    _selectedIndex = 3;
                   });
                   drawerIndexController.setSelectedIndex(4);
                 }),

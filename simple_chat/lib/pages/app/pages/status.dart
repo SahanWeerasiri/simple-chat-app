@@ -1,6 +1,5 @@
 import 'package:simple_chat/components/list/design1/list1.dart';
 import 'package:simple_chat/components/list/design1/list_item_data.dart';
-import 'package:simple_chat/components/top_app_bar/top_app_bar.dart';
 import 'package:simple_chat/constants/consts.dart';
 import 'package:flutter/material.dart';
 
@@ -20,13 +19,6 @@ class _StatusState extends State<Status> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MallikaAppBar5(
-        automaticLeading: true,
-        title: "Chat App - Status",
-        backButton: false,
-        backgroundColor: CustomColors().blue,
-        titleColor: Colors.white,
-      ),
       body: Center(
         child: List1(
           data: _statuses
