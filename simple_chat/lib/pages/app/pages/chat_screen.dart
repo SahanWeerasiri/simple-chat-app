@@ -13,14 +13,21 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final List<ChatBubble> _chatBubbles = [];
+  late final List<ChatBubble> _chatBubbles;
+  @override
+  void initState() {
+    super.initState();
+    _chatBubbles = [];
+  }
+
   final CredentialController credentialController = CredentialController();
 
   void onSend() {
+    String d =
+        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}_${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}";
     setState(() {
       _chatBubbles.add(ChatBubble(
-          chatModel: ChatModel(credentialController.text,
-              DateTime.now().toIso8601String(), true, "Me")));
+          chatModel: ChatModel(credentialController.text, d, true, "Me")));
     });
   }
 
@@ -38,12 +45,12 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             Expanded(
-              child: Container(
-                color: Colors.white,
-                child: ListView(
-                  children: _chatBubbles,
-                ),
-              ), // Space for chat messages
+              child: ListView.builder(
+                itemCount: _chatBubbles.length,
+                itemBuilder: (context, index) {
+                  return _chatBubbles[index];
+                },
+              ),
             ),
             Padding(
                 padding: const EdgeInsets.all(8.0),
