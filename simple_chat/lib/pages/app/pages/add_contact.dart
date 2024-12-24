@@ -1,5 +1,7 @@
 import 'package:simple_chat/components/top_app_bar/top_app_bar.dart';
 import 'package:simple_chat/constants/consts.dart';
+import 'package:simple_chat/components/list/design1/list_item_data.dart';
+import 'package:simple_chat/components/list/design1/list1.dart';
 import 'package:flutter/material.dart';
 
 class AddContact extends StatefulWidget {
@@ -10,6 +12,11 @@ class AddContact extends StatefulWidget {
 }
 
 class _AddContactState extends State<AddContact> {
+  final List<ContactModel> _contacts = [
+    ContactModel("Contact 1", Icons.contact_page_outlined),
+    ContactModel("Contact 2", Icons.contact_page_outlined),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,10 +27,21 @@ class _AddContactState extends State<AddContact> {
         backgroundColor: CustomColors().blue,
         titleColor: Colors.white,
       ),
-      body: const Center(
-        child: Text("Add Contact"),
+      body: Center(
+        child: List1(
+          data: _contacts
+              .map((contact) => ListItem1Data(
+                  title: contact.name, icon: contact.icon, onPressed: () {}))
+              .toList(),
+          color: CustomColors().blueLighter,
+        ),
       ),
-      bottomNavigationBar: null,
     );
   }
+}
+
+class ContactModel {
+  final String name;
+  final IconData icon;
+  ContactModel(this.name, this.icon);
 }
