@@ -16,9 +16,18 @@ class _GroupsState extends State<Groups> {
     return Center(
       child: List1(
         data: [
-          ListItem1Data(title: "Group1", icon: Icons.group, onPressed: () {}),
           ListItem1Data(
-              title: "Group2", icon: Icons.group_outlined, onPressed: () {}),
+              title: "Group1",
+              icon: Icons.group,
+              onPressed: () {
+                Navigator.pushNamed(context, "/chat_screen");
+              }),
+          ListItem1Data(
+              title: "Group2",
+              icon: Icons.group_outlined,
+              onPressed: () {
+                Navigator.pushNamed(context, "/chat_screen");
+              }),
         ],
         color: CustomColors().blueLighter,
       ),
