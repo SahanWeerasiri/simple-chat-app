@@ -23,10 +23,8 @@ class ChatBubble extends StatelessWidget {
                       color: chatModel.isSender
                           ? CustomColors().blueLight
                           : Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.5))
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 10, color: Colors.black)
                       ]),
                   child: Padding(
                     padding: const EdgeInsets.all(5),
@@ -53,7 +51,7 @@ class ChatBubble extends StatelessWidget {
                                       Radius.circular(10)),
                                   color: chatModel.isSender
                                       ? CustomColors().blueLighter
-                                      : CustomColors().blueLighter,
+                                      : CustomColors().blueDark,
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(5),
@@ -84,7 +82,7 @@ class ChatBubble extends StatelessWidget {
                                   style: TextStyle(
                                     color: chatModel.isSender
                                         ? Colors.white
-                                        : CustomColors().blueDark,
+                                        : CustomColors().blueLight,
                                   ),
                                 )
                               ],
