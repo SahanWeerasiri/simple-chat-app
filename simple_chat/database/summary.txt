@@ -1,0 +1,131 @@
+Procedures
+
+CALL `simple_chat`.`add_group_members`(<{IN p_uid INT}>, <{IN p_group_id INT}>, <{IN p_friend_id INT}>);
+CALL `simple_chat`.`add_status`(<{IN p_uid INT}>, <{IN p_msg TEXT}>);
+CALL `simple_chat`.`create_account`(<{IN p_u_name TEXT}>, <{IN p_user_name TEXT}>, <{IN p_user_password TEXT}>);
+CALL `simple_chat`.`create_group`(<{IN p_uid INT}>, <{IN p_name TEXT}>);
+CALL `simple_chat`.`delete_status`(<{IN p_uid INT}>, <{IN p_status_id INT}>);
+CALL `simple_chat`.`get_all_contacts`(<{IN p_uid INT}>);
+CALL `simple_chat`.`get_groups`(<{IN p_uid INT}>);
+CALL `simple_chat`.`get_group_members`(<{IN p_uid INT}>, <{IN p_group_id INT}>);
+CALL `simple_chat`.`get_group_msg`(<{IN p_uid INT}>, <{IN p_group_id INT}>);
+CALL `simple_chat`.`get_msg`(<{IN p_uid INT}>, <{IN p_friend_uid INT}>);
+CALL `simple_chat`.`get_my_contacts`(<{IN p_uid INT}>);
+CALL `simple_chat`.`get_my_status`(<{IN p_uid INT}>);
+CALL `simple_chat`.`get_profile`(<{IN p_uid INT}>);
+CALL `simple_chat`.`get_status`(<{IN p_uid INT}>);
+CALL `simple_chat`.`remove_members`(<{IN p_uid INT}>, <{IN p_foe_id INT}>, <{IN p_group_id INT}>);
+CALL `simple_chat`.`response_request`(<{IN p_uid INT}>, <{IN p_friend_uid INT}>, <{IN p_state ENUM("Accepted","Rejected")}>);
+CALL `simple_chat`.`send_msg`(<{IN p_uid INT}>, <{IN p_friend_uid INT}>, <{IN p_msg TEXT}>, <{IN p_type ENUM("Single","Group")}>);
+CALL `simple_chat`.`send_request`(<{IN p_uid INT}>, <{IN p_friend_uid INT}>);
+CALL `simple_chat`.`show_my_request`(<{IN p_uid INT}>);
+CALL `simple_chat`.`show_their_request`(<{IN p_uid INT}>);
+CALL `simple_chat`.`sign_in`(<{IN p_user_name TEXT}>, <{IN p_user_password TEXT}>);
+CALL `simple_chat`.`sign_out`(<{IN p_uid INT}>);
+CALL `simple_chat`.`update_profile`(<{IN p_uid INT}>, <{IN p_name TEXT}>, <{IN p_img TEXT}>);
+
+
+Tables
+
+CREATE TABLE `chat_history` (
+  `chat_id` int NOT NULL AUTO_INCREMENT,
+  `sender_id` int DEFAULT NULL,
+  `time_stamp` timestamp NULL DEFAULT NULL,
+  `msg_id` int DEFAULT NULL,
+  `chat_type` enum('Single','Group') DEFAULT NULL,
+  PRIMARY KEY (`chat_id`),
+  KEY `sender_id` (`sender_id`),
+  KEY `msg_id` (`msg_id`),
+  CONSTRAINT `chat_history_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `user_` (`uid`),
+  CONSTRAINT `chat_history_ibfk_2` FOREIGN KEY (`msg_id`) REFERENCES `msg` (`msg_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `connect` (
+  `uid_1` int NOT NULL,
+  `uid_2` int NOT NULL,
+  PRIMARY KEY (`uid_1`,`uid_2`),
+  KEY `uid_2` (`uid_2`),
+  CONSTRAINT `connect_ibfk_1` FOREIGN KEY (`uid_1`) REFERENCES `user_` (`uid`),
+  CONSTRAINT `connect_ibfk_2` FOREIGN KEY (`uid_2`) REFERENCES `user_` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `group_` (
+  `group_id` int NOT NULL AUTO_INCREMENT,
+  `group_name` text,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `group_chat` (
+  `chat_id` int NOT NULL,
+  `group_id` int DEFAULT NULL,
+  PRIMARY KEY (`chat_id`),
+  KEY `group_id` (`group_id`),
+  CONSTRAINT `group_chat_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group_` (`group_id`),
+  CONSTRAINT `group_chat_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat_history` (`chat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `group_member` (
+  `group_id` int NOT NULL,
+  `member_id` int NOT NULL,
+  `post` enum('Admin','Member') DEFAULT NULL,
+  PRIMARY KEY (`group_id`,`member_id`),
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `group_member_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group_` (`group_id`),
+  CONSTRAINT `group_member_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `user_` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `msg` (
+  `msg_id` int NOT NULL AUTO_INCREMENT,
+  `messege` text,
+  PRIMARY KEY (`msg_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `request` (
+  `request_id` int NOT NULL AUTO_INCREMENT,
+  `sender_id` int DEFAULT NULL,
+  `reciver_id` int DEFAULT NULL,
+  `state` enum('Pending','Accepted','Rejected') DEFAULT NULL,
+  `time_stamp` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`request_id`),
+  KEY `sender_id` (`sender_id`),
+  KEY `reciver_id` (`reciver_id`),
+  CONSTRAINT `request_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `user_` (`uid`),
+  CONSTRAINT `request_ibfk_2` FOREIGN KEY (`reciver_id`) REFERENCES `user_` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `single_chat` (
+  `chat_id` int NOT NULL,
+  `reciver_id` int DEFAULT NULL,
+  PRIMARY KEY (`chat_id`),
+  KEY `reciver_id` (`reciver_id`),
+  CONSTRAINT `single_chat_ibfk_1` FOREIGN KEY (`reciver_id`) REFERENCES `user_` (`uid`),
+  CONSTRAINT `single_chat_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat_history` (`chat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `state` (
+  `state_id` int NOT NULL AUTO_INCREMENT,
+  `uid` int DEFAULT NULL,
+  `msg_id` int DEFAULT NULL,
+  `time_stamp` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`state_id`),
+  KEY `uid` (`uid`),
+  KEY `msg_id` (`msg_id`),
+  CONSTRAINT `state_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_` (`uid`),
+  CONSTRAINT `state_ibfk_2` FOREIGN KEY (`msg_id`) REFERENCES `msg` (`msg_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `u_profile` (
+  `uid` int NOT NULL,
+  `u_name` text,
+  `img` text,
+  PRIMARY KEY (`uid`),
+  CONSTRAINT `u_profile_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `user_` (
+  `uid` int NOT NULL AUTO_INCREMENT,
+  `user_name` text,
+  `user_password` text,
+  `state` enum('Signed','Signed_Out') DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
