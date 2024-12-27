@@ -3,7 +3,7 @@ use simple_chat;
 CALL create_account("Lahiru","Sahan","SahanSahan"); -- Done
 CALL create_account("Akindu","Akindu","Akinduaki"); -- Done
 
-CALL sign_in("Sahan","SahanSahan",@res);  -- Done
+CALL sign_in("Sahan","SahanSahan");  -- Done
 CALL sign_out(1);  -- Done
 
 CALL get_all_contacts(1);  -- Done

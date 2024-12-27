@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS u_profile;
 CREATE TABLE u_profile(
 	uid INT PRIMARY KEY,
     u_name TEXT,
-    img BLOB,
+    img TEXT,
     FOREIGN KEY (uid) REFERENCES user_(uid)
 );
 
@@ -165,11 +165,11 @@ DROP PROCEDURE IF EXISTS sign_in;
 DELIMITER $$
 CREATE PROCEDURE sign_in(
 	IN p_user_name TEXT,
-    IN p_user_password TEXT,
-    OUT p_uid INT
+    IN p_user_password TEXT
 )
 BEGIN
 	DECLARE v_match_exists BOOLEAN;
+    DECLARE v_uid INT;
     DECLARE v_error_message VARCHAR(255);
     
     -- Error handler to capture error message
@@ -204,11 +204,13 @@ BEGIN
         SET MESSAGE_TEXT = 'User name or Password is incorrect. Try another';
     END IF;
     
-    SELECT uid INTO p_uid
+    SELECT uid INTO v_uid
     FROM user_
     WHERE user_name = p_user_name AND user_password = p_user_password;
     
-    UPDATE user_ SET state = "Signed" WHERE uid = p_uid;
+    UPDATE user_ SET state = "Signed" WHERE uid = v_uid;
+    
+    SELECT v_uid;
     
     COMMIT;
 END $$
@@ -464,7 +466,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS get_msg;
+DROP PROCEDURE IF EXISTS get_group_msg;
 DELIMITER $$
 CREATE PROCEDURE get_group_msg(
 	IN p_uid INT,
@@ -651,48 +653,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS show_members;
-DELIMITER $$
-CREATE PROCEDURE show_members(
-	IN p_uid INT,
-    IN p_group_id INT
-)
-BEGIN
-	DECLARE v_connection_exists BOOLEAN;
-    DECLARE v_error_message VARCHAR(255);
-    
-    -- Error handler to capture error message
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        GET DIAGNOSTICS CONDITION 1
-            v_error_message = MESSAGE_TEXT;
-
-        -- Rollback the transaction
-        ROLLBACK;
-
-        -- Signal an error with a custom message
-        SIGNAL SQLSTATE '45000' 
-		SET MESSAGE_TEXT = v_error_message;
-    END;
-    
-    START TRANSACTION;
-    
-    SELECT COUNT(*)>0 INTO v_connection_exists
-    FROM group_member
-    WHERE group_id = p_group_id AND member_id = p_uid;
-    
-    IF NOT v_connection_exists THEN
-		ROLLBACK;
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'You have not connected with that group';
-    END IF;
-    
-    SELECT u_name,img FROM group_member INNER JOIN u_profile ON member_id = uid WHERE group_id = p_group_id;
-    
-    COMMIT;
-END $$
-DELIMITER ;
-
 DROP PROCEDURE IF EXISTS remove_members;
 DELIMITER $$
 CREATE PROCEDURE remove_members(
@@ -790,7 +750,7 @@ DELIMITER $$
 CREATE PROCEDURE update_profile(
 	IN p_uid INT,
     IN p_name TEXT,
-    IN p_img BLOB
+    IN p_img TEXT
 )
 BEGIN
     DECLARE v_error_message VARCHAR(255);
