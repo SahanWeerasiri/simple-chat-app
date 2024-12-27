@@ -5,6 +5,7 @@ class CustomTextInputTypes {
   final String password = "PASSWORD";
   final String confirmPassword = "CONFIRM_PASSWORD";
   final String text = "TEXT";
+  final String name = "NAME";
 }
 
 class CustomColors {

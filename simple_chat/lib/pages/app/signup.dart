@@ -5,6 +5,7 @@ import 'package:simple_chat/components/top_app_bar/top_app_bar.dart';
 import 'package:simple_chat/constants/consts.dart';
 import 'package:simple_chat/controllers/textController.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_chat/api/user_api.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -18,6 +19,7 @@ class _SignupState extends State<Signup> {
   late final TextStyle textStyleHeading;
   late final TextStyle textStyleTextInputTopic;
   late final TextStyle textStyleInputField;
+  String msg = "";
 
   @override
   void initState() {
@@ -31,10 +33,32 @@ class _SignupState extends State<Signup> {
         color: CustomColors().blueDark,
         fontSize: 15,
         fontWeight: FontWeight.bold);
+    msg = "";
   }
 
-  bool checkCredentials() {
-    return true;
+  Future<bool> checkCredentials() async {
+    if (credentialController.password != credentialController.confirmPassword) {
+      setState(() {
+        msg = "Passwords are not matching";
+      });
+      return false;
+    }
+    Map<String, dynamic> result = await UserApiService().createUser(
+        credentialController.name,
+        credentialController.username,
+        credentialController.password);
+
+    if (result['status'] == true) {
+      setState(() {
+        msg = result['data'].toString();
+      });
+      return true;
+    } else {
+      setState(() {
+        msg = result['error'].toString();
+      });
+      return false;
+    }
   }
 
   bool checkGoogleCredentials() {
@@ -50,7 +74,7 @@ class _SignupState extends State<Signup> {
         context: context,
         builder: (context) => DialogFb2(
               text: "Signup Error!",
-              subText: "Try Again",
+              subText: msg,
               icon: Icons.error,
               basicColor: Colors.white,
               fontColor: Colors.red,
@@ -98,6 +122,32 @@ class _SignupState extends State<Signup> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
+                      "Name",
+                      style: textStyleTextInputTopic,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                InputFieldFb3(
+                    inputController: credentialController,
+                    hint: "Name",
+                    icon: Icons.person,
+                    hintColor: CustomColors().greyHint,
+                    textColor: CustomColors().blueDark,
+                    shadowColor: CustomColors().blueLighter,
+                    enableBorderColor: CustomColors().blueLight,
+                    borderColor: CustomColors().blueDark,
+                    focusedBorderColor: CustomColors().blueDark,
+                    typeKey: CustomTextInputTypes().name),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
                       "User Name",
                       style: textStyleTextInputTopic,
                     )
@@ -128,7 +178,7 @@ class _SignupState extends State<Signup> {
                   height: 5,
                 ),
                 InputFieldFb3(
-                    inputController: CredentialController(),
+                    inputController: credentialController,
                     hint: "Password",
                     icon: Icons.key,
                     hintColor: CustomColors().greyHint,
@@ -152,7 +202,7 @@ class _SignupState extends State<Signup> {
                   height: 5,
                 ),
                 InputFieldFb3(
-                    inputController: CredentialController(),
+                    inputController: credentialController,
                     hint: "Confirm Password",
                     icon: Icons.key,
                     hintColor: CustomColors().greyHint,
@@ -174,8 +224,8 @@ class _SignupState extends State<Signup> {
                         backgroundColor: CustomColors().blue,
                         textColor: Colors.white,
                         icon: Icons.create,
-                        onPressed: () {
-                          if (checkCredentials()) {
+                        onPressed: () async {
+                          if (await checkCredentials()) {
                             navigateToHome();
                           } else {
                             signUpError();

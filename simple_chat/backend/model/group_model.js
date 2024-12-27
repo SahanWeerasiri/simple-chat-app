@@ -1,4 +1,4 @@
-const {pool} = requir('../db');
+const {pool} = require('../db');
 
 // Add group members
 // CALL `simple_chat`.`add_group_members`(<{IN p_uid INT}>, <{IN p_group_id INT}>, <{IN p_friend_id INT}>);
