@@ -236,48 +236,6 @@ class _SignupState extends State<Signup> {
                 const SizedBox(
                   height: 10,
                 ),
-                Divider(
-                  color: CustomColors().greyHint,
-                  endIndent: 5,
-                  thickness: 2,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text("Sign up with,"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomButton(
-                        label: "Google",
-                        backgroundColor: CustomColors().blue,
-                        textColor: Colors.white,
-                        icon: Icons.g_mobiledata_rounded,
-                        onPressed: () {
-                          if (checkGoogleCredentials()) {
-                            navigateToHome();
-                          } else {
-                            signUpError();
-                          }
-                        }),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    CustomButton(
-                        label: "Facebook",
-                        backgroundColor: CustomColors().blue,
-                        textColor: Colors.white,
-                        icon: Icons.facebook,
-                        onPressed: () {
-                          if (checkFacebookCredentials()) {
-                            navigateToHome();
-                          } else {
-                            signUpError();
-                          }
-                        }),
-                  ],
-                )
               ],
             ),
           ),
