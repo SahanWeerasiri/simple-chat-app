@@ -5,7 +5,7 @@ const addStatus = async(req,res)=>{
         console.log("Adding status...")
         const {result} = await statusModel.addStatus(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Adding status successful"
         });
     } catch (error) {
@@ -19,7 +19,7 @@ const deleteStatus = async(req,res)=>{
         console.log("Deleting status...")
         const {result} = await statusModel.deleteStatus(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Deleting status successful"
         });
     } catch (error) {
@@ -33,8 +33,9 @@ const getMyStatus = async(req,res)=>{
         console.log("Getting my status...")
         const {result} = await statusModel.getMyStatus(req.body);
         console.log(result)
-        res.status(201).json({
-            msg: "Getting my status successful"
+        res.status(200).json({
+            msg: "Getting my status successful",
+            data:result[0]
         });
     } catch (error) {
         console.log(error)
@@ -47,8 +48,9 @@ const getStatus = async(req,res)=>{
         console.log("Getting status...")
         const {result} = await statusModel.getStatus(req.body);
         console.log(result)
-        res.status(201).json({
-            msg: "Getting status successful"
+        res.status(200).json({
+            msg: "Getting status successful",
+            data:result[0]
         });
     } catch (error) {
         console.log(error)

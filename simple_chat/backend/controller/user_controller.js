@@ -6,7 +6,7 @@ const createUser = async (req, res) => {
         console.log("Creating a new account...")
         const result = await userModel.createUser(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Account creation successull"
         });
     } catch (error) {
@@ -21,7 +21,7 @@ const signIn = async (req, res) => {
         console.log("Sign In...")
         const {result} = await userModel.signIn(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Sign in successful",
             data: result[0][0].v_uid
         });
@@ -37,7 +37,7 @@ const signOut = async (req, res) => {
         console.log("Sign out...")
         const result = await userModel.signOut(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Sign out successfull"
         });
     } catch (error) {
@@ -52,7 +52,7 @@ const updateProfile = async (req, res) => {
         console.log("Profile updating...")
         const result = await userModel.updateProfile(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Profile updated successfully"
         });
     } catch (error) {
@@ -67,7 +67,7 @@ const getProfile = async (req, res) => {
         console.log("Profile updating...")
         const result = await userModel.getProfile(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Profile recieved successfully",
             data: result[0]
         });

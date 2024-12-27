@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class StatusApiService {
   final String baseUrl =
-      'http://your-backend-ip-or-domain:port'; // Replace with your backend URL
+      'http://192.168.137.215:3000/api/status'; // Replace with your backend URL
 
   // Add a status
   Future<Map<String, dynamic>> addStatus(int uid, String msg) async {
@@ -52,9 +52,9 @@ class StatusApiService {
   // Helper function to process response
   Map<String, dynamic> _processResponse(http.Response response) {
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      return {'status': true, 'data': jsonDecode(response.body)};
     } else {
-      throw Exception('Failed API Call: ${response.body}');
+      throw Exception('Failed API Call: ${jsonDecode(response.body)['error']}');
     }
   }
 }

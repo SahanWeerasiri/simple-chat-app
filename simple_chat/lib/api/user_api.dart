@@ -21,7 +21,7 @@ class UserApiService {
         }),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return {'status': true, 'data': jsonDecode(response.body)};
       } else {
         throw Exception(
@@ -51,9 +51,10 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {'status': true, 'data': jsonDecode(response.body)['data']};
       } else {
-        throw Exception('Failed to sign in: ${response.body}');
+        throw Exception(
+            'Failed to sign in: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
       return {
@@ -80,7 +81,8 @@ class UserApiService {
       if (response.statusCode == 200) {
         return {'status': true, 'data': jsonDecode(response.body)};
       } else {
-        throw Exception('Failed to sign out: ${response.body}');
+        throw Exception(
+            'Failed to sign out: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
       return {
@@ -110,7 +112,8 @@ class UserApiService {
       if (response.statusCode == 200) {
         return {'status': true, 'data': jsonDecode(response.body)};
       } else {
-        throw Exception('Failed to update profile: ${response.body}');
+        throw Exception(
+            'Failed to update profile: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
       return {
@@ -135,9 +138,10 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {'status': true, 'data': jsonDecode(response.body)['data']};
       } else {
-        throw Exception('Failed to fetch profile: ${response.body}');
+        throw Exception(
+            'Failed to fetch profile: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
       return {
