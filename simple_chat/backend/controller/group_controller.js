@@ -49,7 +49,8 @@ const getGroupMsg = async(req,res)=>{
         const {result} = await groupModel.getGroupMsg(req.body);
         console.log(result)
         res.status(201).json({
-            msg: "Getting group msg successful"
+            msg: "Getting group msg successful",
+            data: result[0]
         });
     } catch (error) {
         console.log(error)
@@ -63,7 +64,8 @@ const getGroupMembers = async(req,res)=>{
         const {result} = await groupModel.getGroupMembers(req.body);
         console.log(result)
         res.status(201).json({
-            msg: "Getting group members successful"
+            msg: "Getting group members successful",
+            data: result[0]
         });
     } catch (error) {
         console.log(error)
