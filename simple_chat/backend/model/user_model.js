@@ -1,42 +1,60 @@
 const { pool } = require("../db");
 
-// Get all users
-exports.getAllUsers = async () => {
-    const [rows] = await pool.query("SELECT * FROM users");
-    return rows;
-};
-
-// Get user by ID
-exports.getUserById = async (id) => {
-    const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
-    return rows[0];
-};
-
 // Create new user
-exports.createUser = async (userData) => {
-    const { name, email, password } = userData;
-    const [result] = await pool.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
+const createUser = async (userData) => {
+    const { name, user_name, password } = userData;
+    const [result] = await pool.query("CALL create_account(?, ?, ?)", [
         name,
-        email,
+        user_name,
         password,
     ]);
-    return { id: result.insertId, ...userData };
+    return { result};
 };
 
-// Update user
-exports.updateUser = async (id, userData) => {
-    const { name, email, password } = userData;
-    const [result] = await pool.query("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?", [
-        name,
-        email,
+// Sign in
+const signIn = async (userData) => {
+    const { user_name, password } = userData;
+    const [result] = await pool.query("CALL sign_in(?, ?)", [
+        user_name,
         password,
-        id,
     ]);
-    return result.affectedRows > 0 ? { id, ...userData } : null;
+    return { result};
 };
 
-// Delete user
-exports.deleteUser = async (id) => {
-    const [result] = await pool.query("DELETE FROM users WHERE id = ?", [id]);
-    return result.affectedRows > 0;
+// Sign out
+const signOut = async (userData) => {
+    const { uid } = userData;
+    const [result] = await pool.query("CALL sign_out(?)", [
+        uid
+    ]);
+    return { result};
+};
+
+// Update Profile
+const updateProfile = async (userData) => {
+    const { uid ,name, img } = userData;
+    const [result] = await pool.query("CALL sign_in(?, ?, ?)", [
+        uid,
+        name,
+        img,
+    ]);
+    return { result};
+};
+
+// Get profile
+// CALL `simple_chat`.`get_profile`(<{IN p_uid INT}>);
+const getProfile = async (userData) => {
+    const { uid } = userData;
+    const [result] = await pool.query("CALL get_profile(?)", [
+        uid
+    ]);
+    return { result};
+};
+
+module.exports = {
+    createUser,
+    signIn,
+    signOut,
+    updateProfile,
+    getProfile
 };
