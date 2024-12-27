@@ -6,7 +6,7 @@ const sendMesseges = async (req, res) => {
         console.log("Sending messege...")
         const result = await chatModule.sendMessege(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Messege sent successfully"
         });
     } catch (error) {
@@ -21,7 +21,7 @@ const getMessages = async (req, res) => {
         console.log("Getting messeges...")
         const result = await chatModule.getMessages(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Messege recieved successfully",
             data: result[0]
         });

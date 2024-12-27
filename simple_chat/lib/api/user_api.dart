@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:simple_chat/constants/consts.dart' as con;
 
 class UserApiService {
-  final String baseUrl = 'http://192.168.137.215:3000/api/users';
+  final String baseUrl = '${con.BASE}/api/users';
 
   // Create new user
   Future<Map<String, dynamic>> createUser(
