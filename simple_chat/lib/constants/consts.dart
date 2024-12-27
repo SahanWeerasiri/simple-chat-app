@@ -87,3 +87,5 @@ class DrawerItems {
       required this.icon,
       required this.onTap});
 }
+
+const String BASE = "http://192.168.137.215:3000";
