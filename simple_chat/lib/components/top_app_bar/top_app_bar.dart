@@ -26,6 +26,7 @@ class MallikaAppBar5 extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: backgroundColor,
         elevation: 1,
         automaticallyImplyLeading: automaticLeading,
+        foregroundColor: titleColor,
         leading: backButton
             ? IconButton(
                 icon: Icon(Icons.keyboard_arrow_left, color: titleColor),

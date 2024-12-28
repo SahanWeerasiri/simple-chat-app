@@ -5,6 +5,7 @@ class CustomTextInputTypes {
   final String password = "PASSWORD";
   final String confirmPassword = "CONFIRM_PASSWORD";
   final String text = "TEXT";
+  final String name = "NAME";
 }
 
 class CustomColors {
@@ -85,4 +86,44 @@ class DrawerItems {
       required this.title,
       required this.icon,
       required this.onTap});
+}
+
+const String BASE = "http://192.168.137.215:3000";
+
+class ContactDetails {
+  final String name;
+  final int uid;
+  final String img;
+  ContactDetails({required this.name, required this.uid, required this.img});
+}
+
+class StatusDetails {
+  final String name;
+  final int statusId;
+  final String messege;
+  StatusDetails(
+      {required this.name, required this.statusId, required this.messege});
+}
+
+class Request {
+  final String name;
+  final int requestId;
+  final String img;
+  final String state;
+  final String timestamp;
+  final int senderId;
+  Request(
+      {required this.name,
+      required this.requestId,
+      required this.timestamp,
+      required this.state,
+      required this.img,
+      this.senderId = 0});
+}
+
+class MyProfile {
+  final String name;
+  final int uid;
+  final String img;
+  MyProfile({required this.uid, required this.name, required this.img});
 }

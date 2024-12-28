@@ -33,7 +33,7 @@ const signOut = async (userData) => {
 // Update Profile
 const updateProfile = async (userData) => {
     const { uid ,name, img } = userData;
-    const [result] = await pool.query("CALL sign_in(?, ?, ?)", [
+    const [result] = await pool.query("CALL update_profile(?, ?, ?)", [
         uid,
         name,
         img,

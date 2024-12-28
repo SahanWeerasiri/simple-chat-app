@@ -19,7 +19,8 @@ INSERT INTO `msg` (`msg_id`, `messege`)
 VALUES
 (1, 'Hello!'),
 (2, 'How are you?'),
-(3, 'Goodbye.');
+(3, 'Goodbye.'),
+(4, 'How are you?2');
 
 -- Insert into `chat_history`
 INSERT INTO `chat_history` (`chat_id`, `sender_id`, `time_stamp`, `msg_id`, `chat_type`)
@@ -43,7 +44,7 @@ VALUES
 -- Insert into `group_chat`
 INSERT INTO `group_chat` (`chat_id`, `group_id`)
 VALUES
-(3, 1);
+(2, 1);
 
 -- Insert into `group_member`
 INSERT INTO `group_member` (`group_id`, `member_id`, `post`)
@@ -67,5 +68,5 @@ VALUES
 -- Insert into `state`
 INSERT INTO `state` (`state_id`, `uid`, `msg_id`, `time_stamp`)
 VALUES
-(1, 1, 1, '2024-12-26 12:00:00'),
-(2, 2, 2, '2024-12-26 12:10:00');
+(1, 1, 4, '2024-12-28 12:00:00'),
+(2, 2, 4, '2024-12-28 12:10:00');

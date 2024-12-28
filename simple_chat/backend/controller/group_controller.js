@@ -5,7 +5,7 @@ const addGroupMembers = async(req,res)=>{
         console.log("Adding group members...")
         const {result} = await groupModel.addGroupMembers(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Adding group members successful"
         });
     } catch (error) {
@@ -19,7 +19,7 @@ const getGroups = async(req,res)=>{
         console.log("Getting groups...")
         const {result} = await groupModel.getGroups(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Getting groups successful",
             data: result[0]
         });
@@ -34,7 +34,7 @@ const createGroup = async(req,res)=>{
         console.log("Creating group...")
         const {result} = await groupModel.createGroup(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Creating groups successful"
         });
     } catch (error) {
@@ -48,7 +48,7 @@ const getGroupMsg = async(req,res)=>{
         console.log("Getting group msg...")
         const {result} = await groupModel.getGroupMsg(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Getting group msg successful",
             data: result[0]
         });
@@ -63,7 +63,7 @@ const getGroupMembers = async(req,res)=>{
         console.log("Getting group members...")
         const {result} = await groupModel.getGroupMembers(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Getting group members successful",
             data: result[0]
         });
@@ -78,7 +78,7 @@ const removeMembers = async(req,res)=>{
         console.log("Removing group members...")
         const {result} = await groupModel.removeMembers(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Removing group members successful"
         });
     } catch (error) {

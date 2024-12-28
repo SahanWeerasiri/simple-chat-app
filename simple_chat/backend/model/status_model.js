@@ -14,10 +14,10 @@ const addStatus = async (userData) => {
 // Delete Status
 // CALL `simple_chat`.`delete_status`(<{IN p_uid INT}>, <{IN p_status_id INT}>);
 const deleteStatus = async (userData) => {
-    const {uid, statusId} = userData;
+    const {uid, status_id} = userData;
     const [result] = await pool.query("CALL delete_status(?,?)", [
         uid,
-        statusId
+        status_id
     ]);
     return { result};
 };

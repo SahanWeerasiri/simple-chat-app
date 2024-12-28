@@ -6,9 +6,9 @@ import 'package:simple_chat/constants/consts.dart';
 import 'package:simple_chat/pages/app/pages/chat.dart';
 import 'package:simple_chat/pages/app/pages/groups.dart';
 import 'package:simple_chat/pages/app/pages/profile.dart';
-import 'package:simple_chat/pages/app/pages/settings.dart';
 import 'package:simple_chat/pages/app/pages/status.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_chat/api/user_api.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -18,24 +18,83 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _pages = const [
-    Chat(),
-    Status(),
-    Groups(),
-    Profile(),
-    Settings()
-  ];
+  List<Widget> _pages = [];
   DrawerIndexController drawerIndexController = DrawerIndexController();
   int _selectedIndex = 0; // Add state variable to track selected index
+  late int uid;
+  String logoutMsg = "";
+  bool logoutApproved = false;
+  bool logoutOpend = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = 0;
+    logoutMsg = "";
+    logoutApproved = false;
+    logoutOpend = false;
+  }
+
+  void _getUID() {
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    setState(() {
+      uid = arguments['uid'];
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getUID();
+    setState(() {
+      _pages = [
+        Chat(uid: uid),
+        Status(uid: uid),
+        Groups(uid: uid),
+        Profile(uid: uid),
+      ];
+    });
+  }
+
+  Future<void> logoutService() async {
+    try {
+      Map<String, dynamic> res = await UserApiService().signOut(uid);
+
+      setState(() {
+        if (res['status'] == true) {
+          logoutMsg =
+              res['msg'] ?? 'Logout successful.'; // Default message if null
+          logoutApproved = true;
+        } else {
+          logoutMsg = res['error'] ??
+              'An unknown error occurred.'; // Default error message
+          logoutApproved = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        logoutMsg = 'An error occurred during logout. Please try again.';
+        logoutApproved = false;
+      });
+      // Optionally log the error or show a dialog for debugging
+    }
+  }
 
   void logout() {
+    setState(() {
+      logoutOpend = true;
+    });
     showDialog(
         context: context,
         builder: (context) => DialogFb1(
               icon: Icons.logout,
-              onYes: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+              onYes: () async {
+                await logoutService();
+                if (logoutApproved) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
               },
               onNo: () {
                 Navigator.pop(context);
@@ -106,16 +165,6 @@ class _HomeState extends State<Home> {
                   });
                   drawerIndexController.setSelectedIndex(4);
                 }),
-            DrawerItems(
-                index: 5,
-                title: "Settings",
-                icon: Icons.settings,
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = 4;
-                  });
-                  drawerIndexController.setSelectedIndex(5);
-                }),
           ],
           backgroundColor: CustomColors().blueLight,
           textColor: Colors.white,
@@ -130,11 +179,20 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/add_contact");
+                Navigator.pushNamed(context, "/add_contact",
+                    arguments: {'uid': uid});
               },
               icon: const Icon(Icons.add, color: Colors.white)),
           IconButton(
-              onPressed: logout,
+              onPressed: () {
+                Navigator.pushNamed(context, "/create_group",
+                    arguments: {'uid': uid});
+              },
+              icon: const Icon(Icons.group, color: Colors.white)),
+          IconButton(
+              onPressed: () {
+                logout();
+              },
               icon: const Icon(
                 Icons.logout,
                 color: Colors.white,

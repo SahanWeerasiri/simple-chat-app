@@ -43,6 +43,17 @@ const responseRequest = async (userData) => {
     return {result};
 };
 
+// Remove contact
+// CALL `simple_chat`.`remove_contact`(<{IN p_uid INT}>, <{IN p_foe_id INT}>);
+const removeContact = async (userData) => {
+    const {uid, foeUid} = userData;
+    const [result] = await pool.query("CALL remove_contact(?,?)", [
+        uid,
+        foeUid,
+    ]);
+    return {result};
+};
+
 // Show my requests
 // CALL `simple_chat`.`show_my_request`(<{IN p_uid INT}>);
 const showMyRequests = async (userData) => {
@@ -69,7 +80,8 @@ module.exports = {
     sendRequest,
     responseRequest,
     showMyRequests,
-    showTheirRequests
+    showTheirRequests,
+    removeContact
 };
     
 

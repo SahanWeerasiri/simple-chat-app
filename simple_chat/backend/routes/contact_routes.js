@@ -9,5 +9,6 @@ router.post('/send', contactController.sendRequest);
 router.post('/response', contactController.responseRequest);
 router.post('/myrequests', contactController.showMyRequests);
 router.post('/theirrequest', contactController.showTheirRequests);
+router.post('/remove', contactController.removeContact);
 
 module.exports = router;

@@ -4,6 +4,7 @@ import 'package:simple_chat/components/text_input/text_input_with_leading_icon.d
 import 'package:simple_chat/constants/consts.dart';
 import 'package:simple_chat/controllers/textController.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_chat/api/user_api.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,6 +18,8 @@ class _LoginState extends State<Login> {
   late final TextStyle textStyleHeading;
   late final TextStyle textStyleTextInputTopic;
   late final TextStyle textStyleInputField;
+  String msg = "";
+  late int uid;
 
   @override
   void initState() {
@@ -30,10 +33,24 @@ class _LoginState extends State<Login> {
         color: CustomColors().blueDark,
         fontSize: 15,
         fontWeight: FontWeight.bold);
+    msg = "";
   }
 
-  bool checkCredentials() {
-    return true;
+  Future<bool> checkCredentials() async {
+    Map<String, dynamic> result = await UserApiService()
+        .signIn(credentialController.username, credentialController.password);
+
+    if (result['status'] == true) {
+      setState(() {
+        uid = result['data'];
+      });
+      return true;
+    } else {
+      setState(() {
+        msg = result['error'].toString();
+      });
+      return false;
+    }
   }
 
   void navigateToSignUp() {
@@ -46,7 +63,7 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (context) => DialogFb2(
               text: "Login Error!",
-              subText: "Try Again",
+              subText: msg,
               icon: Icons.error,
               basicColor: Colors.white,
               fontColor: Colors.red,
@@ -63,7 +80,7 @@ class _LoginState extends State<Login> {
 
   void navigateToHome() {
     credentialController.clear();
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushNamed(context, '/home', arguments: {'uid': uid});
   }
 
   @override
@@ -121,7 +138,7 @@ class _LoginState extends State<Login> {
                   height: 5,
                 ),
                 InputFieldFb3(
-                    inputController: CredentialController(),
+                    inputController: credentialController,
                     hint: "Password",
                     icon: Icons.key,
                     hintColor: CustomColors().greyHint,
@@ -140,8 +157,8 @@ class _LoginState extends State<Login> {
                   children: [
                     CustomButton(
                       label: "Sign In",
-                      onPressed: () {
-                        if (checkCredentials()) {
+                      onPressed: () async {
+                        if (await checkCredentials()) {
                           navigateToHome();
                         } else {
                           loginError();

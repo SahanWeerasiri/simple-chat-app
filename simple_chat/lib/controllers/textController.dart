@@ -4,6 +4,7 @@ class CredentialController {
   String username = "";
   String password = "";
   String confirmPassword = "";
+  String name = "";
 
   String text = "";
   void setCredentials(String key, String value) {
@@ -15,6 +16,8 @@ class CredentialController {
       text = value;
     } else if (key == CustomTextInputTypes().confirmPassword) {
       confirmPassword = value;
+    } else if (key == CustomTextInputTypes().name) {
+      name = value;
     }
   }
 

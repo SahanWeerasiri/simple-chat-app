@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:simple_chat/constants/consts.dart' as con;
 
 class ChatApiService {
-  final String baseUrl = 'http://localhost:3306/api/chats';
+  final String baseUrl = '${con.BASE}/api/chats';
 
   // Send msg
   Future<Map<String, dynamic>> sendMessege(
@@ -19,12 +20,16 @@ class ChatApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'message': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to send msg: ${response.body}');
+        throw Exception(jsonDecode(response.body)['error']);
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {'status': false, 'error': e.toString()};
     }
   }
 
@@ -47,12 +52,16 @@ class ChatApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to get messeges: ${response.body}');
+        throw Exception(jsonDecode(response.body)['error']);
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {'status': false, 'error': e.toString()};
     }
   }
 }

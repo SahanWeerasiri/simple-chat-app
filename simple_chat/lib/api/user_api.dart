@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:simple_chat/constants/consts.dart' as con;
 
 class UserApiService {
-  final String baseUrl = 'http://localhost:3306/api/users';
+  final String baseUrl = '${con.BASE}/api/users';
 
   // Create new user
   Future<Map<String, dynamic>> createUser(
@@ -22,12 +23,20 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to create user: ${response.body}');
+        throw Exception(
+            'Failed to create user: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {
+        'error': e.toString(),
+        'status': false,
+      };
     }
   }
 
@@ -47,12 +56,20 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to sign in: ${response.body}');
+        throw Exception(
+            'Failed to sign in: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {
+        'error': e.toString(),
+        'status': false,
+      };
     }
   }
 
@@ -71,12 +88,20 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to sign out: ${response.body}');
+        throw Exception(
+            'Failed to sign out: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {
+        'error': e.toString(),
+        'status': false,
+      };
     }
   }
 
@@ -98,12 +123,20 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to update profile: ${response.body}');
+        throw Exception(
+            'Failed to update profile: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {
+        'error': e.toString(),
+        'status': false,
+      };
     }
   }
 
@@ -122,12 +155,20 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to fetch profile: ${response.body}');
+        throw Exception(
+            'Failed to fetch profile: ${jsonDecode(response.body)['error']}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return {
+        'error': e.toString(),
+        'status': false,
+      };
     }
   }
 }

@@ -4,18 +4,20 @@ import 'package:simple_chat/components/list/design1/list_item_data.dart';
 import 'package:simple_chat/components/list/design1/list1.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chat/api/contacts_api.dart';
+import 'package:simple_chat/api/group_api.dart';
 
-class AddContact extends StatefulWidget {
-  const AddContact({super.key});
+class AddMembers extends StatefulWidget {
+  const AddMembers({super.key});
 
   @override
-  State<AddContact> createState() => _AddContactState();
+  State<AddMembers> createState() => _AddMembersState();
 }
 
-class _AddContactState extends State<AddContact> {
-  late List<ContactDetails> _contacts = [];
+class _AddMembersState extends State<AddMembers> {
+  late List<ContactDetails> _contacts;
   bool _isLoading = true; // Loading state
   late int uid;
+  late int groupId;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _AddContactState extends State<AddContact> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     setState(() {
       uid = arguments['uid'];
+      groupId = arguments['group_id'];
     });
   }
 
@@ -41,7 +44,7 @@ class _AddContactState extends State<AddContact> {
 
   Future<void> _fetchContacts() async {
     try {
-      Map<String, dynamic> map = await ContactApiService().getAllContacts(uid);
+      Map<String, dynamic> map = await ContactApiService().getMyContacts(uid);
       if (map['status']) {
         List<ContactDetails> contacts = (map['data'] as List).map((element) {
           return ContactDetails(
@@ -81,10 +84,10 @@ class _AddContactState extends State<AddContact> {
     }
   }
 
-  Future<void> _addContact(int friendUid) async {
+  Future<void> _addMember(int friendUid) async {
     try {
       Map<String, dynamic> map =
-          await ContactApiService().sendRequest(uid, friendUid);
+          await GroupApiService().addGroupMembers(uid, groupId, friendUid);
       if (map['status']) {
         setState(() {
           _isLoading = false; // Set loading to false
@@ -123,12 +126,12 @@ class _AddContactState extends State<AddContact> {
           child: CircularProgressIndicator(
         backgroundColor: Colors.white,
         color: CustomColors().blue,
-      )); // Show loading indicator
+      ));
     }
     return Scaffold(
       appBar: MallikaAppBar5(
         automaticLeading: true,
-        title: "Chat App - Add Contact",
+        title: "Chat App - Add Members",
         backButton: false,
         backgroundColor: CustomColors().blue,
         titleColor: Colors.white,
@@ -140,7 +143,10 @@ class _AddContactState extends State<AddContact> {
                   title: contact.name,
                   icon: Icons.person,
                   onPressed: () {
-                    _addContact(contact.uid);
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    _addMember(contact.uid);
                   },
                   icon2: Icons.add))
               .toList(),

@@ -4,9 +4,9 @@ const userModel = require("../model/user_model");
 const createUser = async (req, res) => {
     try {
         console.log("Creating a new account...")
-        const result = await userModel.createUser(req.body);
+        const {result} = await userModel.createUser(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Account creation successull"
         });
     } catch (error) {
@@ -21,7 +21,7 @@ const signIn = async (req, res) => {
         console.log("Sign In...")
         const {result} = await userModel.signIn(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Sign in successful",
             data: result[0][0].v_uid
         });
@@ -35,9 +35,9 @@ const signIn = async (req, res) => {
 const signOut = async (req, res) => {
     try {
         console.log("Sign out...")
-        const result = await userModel.signOut(req.body);
+        const {result} = await userModel.signOut(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Sign out successfull"
         });
     } catch (error) {
@@ -50,9 +50,9 @@ const signOut = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         console.log("Profile updating...")
-        const result = await userModel.updateProfile(req.body);
+        const {result} = await userModel.updateProfile(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Profile updated successfully"
         });
     } catch (error) {
@@ -65,9 +65,9 @@ const updateProfile = async (req, res) => {
 const getProfile = async (req, res) => {
     try {
         console.log("Profile updating...")
-        const result = await userModel.getProfile(req.body);
+        const {result} = await userModel.getProfile(req.body);
         console.log(result)
-        res.status(201).json({
+        res.status(200).json({
             msg: "Profile recieved successfully",
             data: result[0]
         });

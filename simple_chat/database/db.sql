@@ -236,7 +236,7 @@ CREATE PROCEDURE get_all_contacts(
 	IN p_uid INT
 )
 BEGIN
-	SELECT * FROM u_profile WHERE NOT(uid = p_uid); 
+	SELECT * FROM u_profile WHERE (NOT(uid = p_uid)) AND ((uid IN (SELECT uid_1 FROM connect WHERE uid_2=p_uid)) OR (uid IN (SELECT uid_2 FROM connect WHERE uid_1=p_uid))); 
 END $$
 DELIMITER ;
 
@@ -346,7 +346,7 @@ CREATE PROCEDURE show_my_request(
 	IN p_uid INT
 )
 BEGIN
-	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON reciver_id = uid WHERE sender_id = p_uid;
+	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON reciver_id = uid WHERE sender_id = p_uid ORDER BY time_stamp DESC;
 END $$
 DELIMITER ;
 
@@ -356,7 +356,18 @@ CREATE PROCEDURE show_their_request(
 	IN p_uid INT
 )
 BEGIN
-	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON sender_id = uid WHERE reciver_id = p_uid;
+	SELECT request_id,u_name,img,state,time_stamp,sender_id FROM request INNER JOIN u_profile ON sender_id = uid WHERE reciver_id = p_uid ORDER BY time_stamp DESC;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS remove_contact;
+DELIMITER $$
+CREATE PROCEDURE remove_contact(
+	IN p_uid INT,
+    IN p_foe_id INT
+)
+BEGIN
+	DELETE FROM connect WHERE (uid_1 = p_uid AND uid_2 = p_foe_id) OR (uid_2 = p_uid AND uid_1 = p_foe_id); 
 END $$
 DELIMITER ;
 
@@ -409,9 +420,9 @@ BEGIN
     SET v_chat_id = LAST_INSERT_ID();
     
     IF p_type = "Single" THEN
-		INSERT INTO single_chat(chat_id,reciver_id) VALUES (v_chat_id,p_friend_id);
+		INSERT INTO single_chat(chat_id,reciver_id) VALUES (v_chat_id,p_friend_uid);
 	ELSE
-		INSERT INTO group_chat(chat_id,reciver_id) VALUES (v_chat_id,p_friend_id);
+		INSERT INTO group_chat(chat_id,group_id) VALUES (v_chat_id,p_friend_uid);
 	END IF;
     
     COMMIT;
@@ -458,9 +469,10 @@ BEGIN
     END IF;
     
 	SELECT sender_id,time_stamp,messege,u_name FROM 
-	((chat_history INNER JOIN single_chat ON chat_history.chat_id = single_chat.chat_id) 
-	INNER JOIN u_profile ON sender_id = uid )
-	WHERE (sender_id = p_uid AND reciver_id = p_friend_uid) OR (reciver_id = p_uid AND sender_id = p_friend_uid);
+	(((chat_history INNER JOIN single_chat ON chat_history.chat_id = single_chat.chat_id) 
+	INNER JOIN u_profile ON sender_id = uid )) 
+    INNER JOIN msg ON chat_history.msg_id = msg.msg_id
+	WHERE (sender_id = p_uid AND reciver_id = p_friend_uid) OR (reciver_id = p_uid AND sender_id = p_friend_uid) ORDER BY time_stamp ASC;
     
     COMMIT;
 END $$
@@ -506,8 +518,8 @@ BEGIN
         
 	SELECT sender_id,time_stamp,messege,u_name FROM 
 	((chat_history INNER JOIN group_chat ON chat_history.chat_id = group_chat.chat_id) 
-	INNER JOIN u_profile ON sender_id = uid )
-	WHERE group_id = p_group_id;
+	INNER JOIN u_profile ON sender_id = uid ) INNER JOIN msg ON msg.msg_id = chat_history.msg_id
+	WHERE group_id = p_group_id ORDER BY time_stamp ASC;
 
     COMMIT;
 END $$
@@ -639,7 +651,7 @@ BEGIN
     
     SELECT COUNT(*)>0 INTO v_friend_connection_exists
     FROM group_member
-    WHERE group_id = p_group_id AND member_id = p_member_id;
+    WHERE group_id = p_group_id AND member_id = p_friend_id;
     
     IF v_friend_connection_exists THEN
 		ROLLBACK;
@@ -647,7 +659,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Your friend is already in the group';
     END IF;
     
-    INSERT INTO group_member(group_id, member_id) VALUES (p_group_id,p_friend_id,"Member");
+    INSERT INTO group_member(group_id, member_id,post) VALUES (p_group_id,p_friend_id,"Member");
     
     COMMIT;
 END $$
@@ -739,7 +751,7 @@ BEGIN
     
     START TRANSACTION;
     
-    SELECT * FROM u_profile WHERE uid = p_uid;
+    SELECT u_name,img FROM u_profile WHERE uid = p_uid;
     
     COMMIT;
 END $$
@@ -777,7 +789,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Your name can not be empty';
     END IF;
     
-    UPDATE u_profile SET u_name = p_name, img = p_img;
+    UPDATE u_profile SET u_name = p_name, img = p_img WHERE uid = p_uid;
     
     COMMIT;
 END $$
@@ -814,7 +826,7 @@ BEGIN
     
     SET v_msg_id = LAST_INSERT_ID();
     
-    INSERT INTO state(uid,msg_id) VALUES(p_uid,v_msg_id,CURRENT_TIMESTAMP);
+    INSERT INTO state(uid,msg_id,time_stamp) VALUES(p_uid,v_msg_id,CURRENT_TIMESTAMP);
     
     COMMIT;
 END $$
@@ -856,11 +868,11 @@ BEGIN
         SET MESSAGE_TEXT = 'You have not any contact';
     END IF;
     
-    -- Delete expired status
-    DELETE FROM state WHERE time_stamp < NOW() - INTERVAL 1 DAY;
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+     -- Delete expired status
+    DELETE FROM state WHERE time_stamp < (NOW() - INTERVAL 1 DAY);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
-    SELECT messege,u_name,img FROM 
+    SELECT messege,u_name,state_id AS status_id FROM 
     ((state INNER JOIN msg ON state.msg_id = msg.msg_id)
     INNER JOIN u_profile ON state.uid = u_profile.uid) 
     WHERE state.uid IN (SELECT uid_1 FROM connect WHERE uid_2 = p_uid) OR state.uid IN (SELECT uid_2 FROM connect WHERE uid_1 = p_uid);
@@ -878,11 +890,11 @@ BEGIN
     
     START TRANSACTION;
     
-    -- Delete expired status
+     -- Delete expired status
     DELETE FROM state WHERE time_stamp < NOW() - INTERVAL 1 DAY;
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
-    SELECT messege,state_id FROM 
+    SELECT messege,state_id AS status_id FROM 
     state INNER JOIN msg ON state.msg_id = msg.msg_id
     WHERE state.uid = p_uid;
         
@@ -902,7 +914,7 @@ BEGIN
     
     DELETE FROM state WHERE state_id = p_status_id;
     
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
     COMMIT;
 END $$
