@@ -81,7 +81,7 @@ class _ChatState extends State<Chat> {
                   icon: Icons.person,
                   onPressed: () {
                     Navigator.pushNamed(context, "/chat_screen",
-                        arguments: {'friend_uid': e.uid});
+                        arguments: {'friend_uid': e.uid, 'uid': widget.uid});
                   },
                 ))
             .toList(),

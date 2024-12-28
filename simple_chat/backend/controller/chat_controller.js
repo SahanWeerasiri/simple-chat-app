@@ -20,10 +20,10 @@ const getMessages = async (req, res) => {
     try {
         console.log("Getting messeges...")
         const result = await chatModule.getMessages(req.body);
-        console.log(result)
+        console.log(result['result'])
         res.status(200).json({
             msg: "Messege recieved successfully",
-            data: result[0]
+            data: result['result'][0]
         });
     } catch (error) {
         console.log(error)

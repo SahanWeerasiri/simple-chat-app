@@ -26,7 +26,7 @@ class ChatApiService {
           'message': jsonDecode(response.body)['msg']
         };
       } else {
-        throw Exception('Failed to send msg: ${response.body}');
+        throw Exception(jsonDecode(response.body)['error']);
       }
     } catch (e) {
       return {'status': false, 'error': e.toString()};
@@ -52,9 +52,13 @@ class ChatApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
-        throw Exception('Failed to get messeges: ${response.body}');
+        throw Exception(jsonDecode(response.body)['error']);
       }
     } catch (e) {
       return {'status': false, 'error': e.toString()};
