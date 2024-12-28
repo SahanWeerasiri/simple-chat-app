@@ -114,9 +114,10 @@ class _GroupInfoState extends State<GroupInfo> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
           child: CircularProgressIndicator(
         backgroundColor: Colors.white,
+        color: CustomColors().blue,
       ));
     }
     return Scaffold(

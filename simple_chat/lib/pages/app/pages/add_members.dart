@@ -14,7 +14,7 @@ class AddMembers extends StatefulWidget {
 }
 
 class _AddMembersState extends State<AddMembers> {
-  late List<ContactDetails> _contacts = [];
+  late List<ContactDetails> _contacts;
   bool _isLoading = true; // Loading state
   late int uid;
   late int groupId;
@@ -44,7 +44,7 @@ class _AddMembersState extends State<AddMembers> {
 
   Future<void> _fetchContacts() async {
     try {
-      Map<String, dynamic> map = await ContactApiService().getAllContacts(uid);
+      Map<String, dynamic> map = await ContactApiService().getMyContacts(uid);
       if (map['status']) {
         List<ContactDetails> contacts = (map['data'] as List).map((element) {
           return ContactDetails(
@@ -122,8 +122,11 @@ class _AddMembersState extends State<AddMembers> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading indicator
+      return Center(
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      ));
     }
     return Scaffold(
       appBar: MallikaAppBar5(

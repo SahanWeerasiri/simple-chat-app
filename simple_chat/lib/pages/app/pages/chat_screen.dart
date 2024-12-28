@@ -227,7 +227,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Center(
-          child: CircularProgressIndicator(color: CustomColors().blue));
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      ));
     }
     return Scaffold(
       appBar: MallikaAppBar5(

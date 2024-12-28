@@ -187,11 +187,17 @@ class _StatusState extends State<Status> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading indicator
+      return Center(
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      ));
     }
     return Scaffold(
-      body: Column(
+        body: Container(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        spacing: 5,
         children: [
           const SizedBox(
             height: 5,
@@ -209,9 +215,6 @@ class _StatusState extends State<Status> {
               onPressed: () {
                 onAdd();
               }),
-          const SizedBox(
-            height: 2,
-          ),
           const Divider(
             height: 2,
           ),
@@ -233,9 +236,6 @@ class _StatusState extends State<Status> {
               color: CustomColors().blueLighter,
             ),
           ),
-          const SizedBox(
-            height: 2,
-          ),
           const Divider(
             height: 2,
           ),
@@ -253,11 +253,8 @@ class _StatusState extends State<Status> {
               color: CustomColors().blueLighter,
             ),
           ),
-          const SizedBox(
-            height: 5,
-          )
         ],
       ),
-    );
+    ));
   }
 }

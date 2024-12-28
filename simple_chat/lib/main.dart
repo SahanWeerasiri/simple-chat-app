@@ -7,7 +7,6 @@ import 'package:simple_chat/pages/app/pages/chat_screen.dart';
 import 'package:simple_chat/pages/app/pages/group_info.dart';
 import 'package:simple_chat/pages/app/pages/groups.dart';
 import 'package:simple_chat/pages/app/pages/profile.dart';
-import 'package:simple_chat/pages/app/pages/settings.dart';
 import 'package:simple_chat/pages/app/pages/status.dart';
 import 'package:simple_chat/pages/app/signup.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,6 @@ class MyApp extends StatelessWidget {
               uid: 0,
             ),
         '/add_contact': (context) => const AddContact(),
-        '/settings': (context) => const Settings(),
         '/profile': (context) => const Profile(
               uid: 0,
             ),

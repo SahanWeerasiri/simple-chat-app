@@ -124,5 +124,6 @@ class Request {
 class MyProfile {
   final String name;
   final int uid;
-  MyProfile({required this.uid, required this.name});
+  final String img;
+  MyProfile({required this.uid, required this.name, required this.img});
 }

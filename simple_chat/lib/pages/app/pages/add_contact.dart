@@ -119,8 +119,11 @@ class _AddContactState extends State<AddContact> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading indicator
+      return Center(
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      )); // Show loading indicator
     }
     return Scaffold(
       appBar: MallikaAppBar5(

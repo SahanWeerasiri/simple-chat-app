@@ -9,6 +9,7 @@ import 'package:simple_chat/constants/consts.dart';
 import 'package:simple_chat/api/contacts_api.dart';
 import 'package:simple_chat/controllers/textController.dart';
 import 'package:simple_chat/api/user_api.dart';
+import 'package:simple_chat/pages/app/additional/simple_dialogue_response.dart';
 
 class Profile extends StatefulWidget {
   final int uid;
@@ -23,6 +24,7 @@ class _ProfileState extends State<Profile> {
   late List<Request> _requests;
   late List<Request> _myRequests;
   late MyProfile me;
+  String name = "";
   late final CredentialController credentialController = CredentialController();
   bool _isLoading = true; // Loading state
 
@@ -45,6 +47,7 @@ class _ProfileState extends State<Profile> {
               name: element['u_name'],
               img: element['img'],
               state: element['state'],
+              senderId: element['sender_id'],
               timestamp: element['time_stamp']);
         }).toList();
         setState(() {
@@ -128,12 +131,14 @@ class _ProfileState extends State<Profile> {
       Map<String, dynamic> map2 = await UserApiService().getProfile(widget.uid);
       if (map2['status']) {
         List<MyProfile> myProfile = (map2['data'] as List).map((element) {
-          return MyProfile(uid: widget.uid, name: element['u_name']);
+          return MyProfile(
+              uid: widget.uid, name: element['u_name'], img: element['img']);
         }).toList();
 
         setState(() {
           me = myProfile[0];
           credentialController.name = me.name;
+          name = me.name;
           _isLoading = false;
         });
 
@@ -189,8 +194,14 @@ class _ProfileState extends State<Profile> {
   }
 
   void onUpdate() async {
-    Map<String, dynamic> res = await UserApiService()
-        .updateProfile(widget.uid, credentialController.name, "");
+    String imgUp = me.img;
+    String nameUp = me.name;
+    if (credentialController.name != "") {
+      nameUp = credentialController.name;
+    }
+
+    Map<String, dynamic> res =
+        await UserApiService().updateProfile(widget.uid, nameUp, imgUp);
     if (res['status']) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -199,6 +210,10 @@ class _ProfileState extends State<Profile> {
             backgroundColor: Colors.green,
           ),
         );
+      });
+      setState(() {
+        credentialController.name = "";
+        _getProfile();
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -210,6 +225,14 @@ class _ProfileState extends State<Profile> {
         );
       });
     }
+  }
+
+  void refresh() {
+    setState(() {
+      _fetchRequests();
+      _fetchMyRequests();
+      _getProfile();
+    });
   }
 
   void _showDialogue(String msg, String name) {
@@ -232,6 +255,40 @@ class _ProfileState extends State<Profile> {
             ));
   }
 
+  void _showDialogueResponse(String msg, String name, int senderId) {
+    showDialog(
+        context: context,
+        builder: (context) => DialogResponse(
+              text: name,
+              subText: msg,
+              icon: Icons.add_reaction,
+              basicColor: Colors.white,
+              fontColor: Colors.black,
+              subTextFontColor: CustomColors().blue,
+              backgroundColor: Colors.white,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              btnText: "Close",
+              btnBackColor: CustomColors().blue,
+              btnTextColor: Colors.white,
+              onPressedAccepted: () {
+                onResponse(senderId, "Accepted");
+                Navigator.pop(context);
+                setState(() {
+                  _fetchRequests();
+                });
+              },
+              onPressedRejected: () {
+                onResponse(senderId, "Rejected");
+                Navigator.pop(context);
+                setState(() {
+                  _fetchRequests();
+                });
+              },
+            ));
+  }
+
   Color _getBackColor(String status) {
     if (status == "Pending") {
       return CustomColors().blueLighter;
@@ -244,40 +301,60 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    AppSizes().initSizes(context);
     if (_isLoading) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading indicator
+      return Center(
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      ));
     }
     return Scaffold(
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          spacing: 10,
+          spacing: 5,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: CustomColors().blueLighter,
-                child: const Icon(Icons.person),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: InputFieldFb3(
-                  inputController: credentialController,
-                  hint: "Name",
-                  icon: Icons.person,
-                  typeKey: CustomTextInputTypes().name),
-            ),
-            CustomButton(
-                label: "Update",
-                backgroundColor: CustomColors().blue,
-                textColor: Colors.white,
-                icon: Icons.update,
-                onPressed: () {
-                  onUpdate();
-                }),
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: CustomColors().blueLighter,
+                          child: const Icon(Icons.person),
+                        ),
+                        Text(name)
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: AppSizes().getBlockSizeHorizontal(50),
+                          height: AppSizes().getBlockSizeHorizontal(10),
+                          child: InputFieldFb3(
+                              inputController: credentialController,
+                              hint: "Name",
+                              icon: Icons.abc,
+                              typeKey: CustomTextInputTypes().name),
+                        ),
+                        CustomButton(
+                            label: "Update",
+                            backgroundColor: CustomColors().blue,
+                            textColor: Colors.white,
+                            icon: Icons.update,
+                            onPressed: () async {
+                              onUpdate();
+                            }),
+                      ],
+                    )
+                  ],
+                )),
             const SizedBox(
               height: 2,
             ),
@@ -290,14 +367,16 @@ class _ProfileState extends State<Profile> {
                 data: _myRequests
                     .map(
                       (status) => ListItem1Data(
-                        title: '${status.name}\n${status.state}',
-                        icon: Icons.star,
-                        icon2: Icons.arrow_forward,
-                        onPressed: () {},
-                      ),
+                          title: '${status.name}\n${status.state}',
+                          icon: Icons.star,
+                          icon2: Icons.arrow_forward,
+                          onPressed: () {
+                            _showDialogue(status.name,
+                                '${status.state}\n${status.timestamp}');
+                          },
+                          color: _getBackColor(status.state)),
                     )
                     .toList(),
-                color: CustomColors().blueLighter,
               ),
             ),
             const SizedBox(
@@ -314,8 +393,10 @@ class _ProfileState extends State<Profile> {
                         title: '${status.name}\n${status.state}',
                         icon: Icons.star,
                         onPressed: () {
-                          _showDialogue(status.name,
-                              '${status.state}\n${status.timestamp}');
+                          _showDialogueResponse(
+                              status.name,
+                              '${status.state}\n${status.timestamp}',
+                              status.senderId);
                         },
                         color: _getBackColor(status.state)))
                     .toList(),

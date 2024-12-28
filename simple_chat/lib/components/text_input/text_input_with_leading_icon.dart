@@ -29,7 +29,7 @@ class InputFieldFb3 extends StatefulWidget {
       this.erroBorderColor = Colors.red,
       this.enableBorderColor = Colors.blue,
       this.shadowColor = Colors.blue,
-      this.hintColor = Colors.grey,
+      this.hintColor = Colors.white,
       this.isPassword = false,
       this.inputType = TextInputType.name,
       this.fontSize = 14,

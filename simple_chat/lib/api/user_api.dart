@@ -23,7 +23,11 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception(
             'Failed to create user: ${jsonDecode(response.body)['error']}');
@@ -52,7 +56,11 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)['data']};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception(
             'Failed to sign in: ${jsonDecode(response.body)['error']}');
@@ -80,7 +88,11 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception(
             'Failed to sign out: ${jsonDecode(response.body)['error']}');
@@ -111,7 +123,11 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body),
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception(
             'Failed to update profile: ${jsonDecode(response.body)['error']}');
@@ -139,7 +155,11 @@ class UserApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)['data']};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'messege': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception(
             'Failed to fetch profile: ${jsonDecode(response.body)['error']}');

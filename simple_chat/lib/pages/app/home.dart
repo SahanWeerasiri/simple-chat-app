@@ -6,7 +6,6 @@ import 'package:simple_chat/constants/consts.dart';
 import 'package:simple_chat/pages/app/pages/chat.dart';
 import 'package:simple_chat/pages/app/pages/groups.dart';
 import 'package:simple_chat/pages/app/pages/profile.dart';
-import 'package:simple_chat/pages/app/pages/settings.dart';
 import 'package:simple_chat/pages/app/pages/status.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chat/api/user_api.dart';
@@ -54,7 +53,6 @@ class _HomeState extends State<Home> {
         Status(uid: uid),
         Groups(uid: uid),
         Profile(uid: uid),
-        const Settings()
       ];
     });
   }
@@ -166,16 +164,6 @@ class _HomeState extends State<Home> {
                     _selectedIndex = 3;
                   });
                   drawerIndexController.setSelectedIndex(4);
-                }),
-            DrawerItems(
-                index: 5,
-                title: "Settings",
-                icon: Icons.settings,
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = 4;
-                  });
-                  drawerIndexController.setSelectedIndex(5);
                 }),
           ],
           backgroundColor: CustomColors().blueLight,

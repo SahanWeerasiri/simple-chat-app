@@ -68,8 +68,11 @@ class _GroupsState extends State<Groups> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading indicator
+      return Center(
+          child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: CustomColors().blue,
+      )); // Show loading indicator
     }
     return Center(
       child: List1(

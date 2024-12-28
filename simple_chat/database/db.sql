@@ -236,7 +236,7 @@ CREATE PROCEDURE get_all_contacts(
 	IN p_uid INT
 )
 BEGIN
-	SELECT * FROM u_profile WHERE (NOT(uid = p_uid)) AND ((uid NOT IN (SELECT uid_1 FROM connect WHERE uid_2=p_uid)) AND (uid NOT IN (SELECT uid_2 FROM connect WHERE uid_1=p_uid))); 
+	SELECT * FROM u_profile WHERE (NOT(uid = p_uid)) AND ((uid IN (SELECT uid_1 FROM connect WHERE uid_2=p_uid)) OR (uid IN (SELECT uid_2 FROM connect WHERE uid_1=p_uid))); 
 END $$
 DELIMITER ;
 
@@ -751,7 +751,7 @@ BEGIN
     
     START TRANSACTION;
     
-    SELECT * FROM u_profile WHERE uid = p_uid;
+    SELECT u_name,img FROM u_profile WHERE uid = p_uid;
     
     COMMIT;
 END $$
@@ -789,7 +789,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Your name can not be empty';
     END IF;
     
-    UPDATE u_profile SET u_name = p_name, img = p_img;
+    UPDATE u_profile SET u_name = p_name, img = p_img WHERE uid = p_uid;
     
     COMMIT;
 END $$

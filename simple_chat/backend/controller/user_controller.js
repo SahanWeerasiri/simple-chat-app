@@ -4,7 +4,7 @@ const userModel = require("../model/user_model");
 const createUser = async (req, res) => {
     try {
         console.log("Creating a new account...")
-        const result = await userModel.createUser(req.body);
+        const {result} = await userModel.createUser(req.body);
         console.log(result)
         res.status(200).json({
             msg: "Account creation successull"
@@ -35,7 +35,7 @@ const signIn = async (req, res) => {
 const signOut = async (req, res) => {
     try {
         console.log("Sign out...")
-        const result = await userModel.signOut(req.body);
+        const {result} = await userModel.signOut(req.body);
         console.log(result)
         res.status(200).json({
             msg: "Sign out successfull"
@@ -50,7 +50,7 @@ const signOut = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         console.log("Profile updating...")
-        const result = await userModel.updateProfile(req.body);
+        const {result} = await userModel.updateProfile(req.body);
         console.log(result)
         res.status(200).json({
             msg: "Profile updated successfully"
@@ -65,7 +65,7 @@ const updateProfile = async (req, res) => {
 const getProfile = async (req, res) => {
     try {
         console.log("Profile updating...")
-        const result = await userModel.getProfile(req.body);
+        const {result} = await userModel.getProfile(req.body);
         console.log(result)
         res.status(200).json({
             msg: "Profile recieved successfully",
