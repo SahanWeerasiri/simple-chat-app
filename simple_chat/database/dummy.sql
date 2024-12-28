@@ -43,7 +43,7 @@ VALUES
 -- Insert into `group_chat`
 INSERT INTO `group_chat` (`chat_id`, `group_id`)
 VALUES
-(3, 1);
+(2, 1);
 
 -- Insert into `group_member`
 INSERT INTO `group_member` (`group_id`, `member_id`, `post`)

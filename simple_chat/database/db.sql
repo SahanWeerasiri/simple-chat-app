@@ -360,6 +360,17 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS remove_contact;
+DELIMITER $$
+CREATE PROCEDURE remove_contact(
+	IN p_uid INT,
+    IN p_foe_id INT
+)
+BEGIN
+	DELETE FROM connect WHERE (uid_1 = p_uid AND uid_2 = p_foe_id) OR (uid_2 = p_uid AND uid_1 = p_foe_id); 
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS send_msg;
 DELIMITER $$
 CREATE PROCEDURE send_msg(
@@ -640,7 +651,7 @@ BEGIN
     
     SELECT COUNT(*)>0 INTO v_friend_connection_exists
     FROM group_member
-    WHERE group_id = p_group_id AND member_id = p_member_id;
+    WHERE group_id = p_group_id AND member_id = p_friend_id;
     
     IF v_friend_connection_exists THEN
 		ROLLBACK;
@@ -648,7 +659,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Your friend is already in the group';
     END IF;
     
-    INSERT INTO group_member(group_id, member_id) VALUES (p_group_id,p_friend_id,"Member");
+    INSERT INTO group_member(group_id, member_id,post) VALUES (p_group_id,p_friend_id,"Member");
     
     COMMIT;
 END $$

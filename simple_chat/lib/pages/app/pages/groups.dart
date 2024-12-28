@@ -81,7 +81,9 @@ class _GroupsState extends State<Groups> {
                     Navigator.pushNamed(context, "/chat_screen", arguments: {
                       'group_id': e.uid,
                       'uid': widget.uid,
-                      'is_group': true
+                      'is_group': true,
+                      'group_name': e.name,
+                      'group_img': e.img
                     });
                   },
                 ))

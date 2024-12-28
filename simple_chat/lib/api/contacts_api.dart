@@ -81,6 +81,21 @@ class ContactApiService {
     }
   }
 
+  // Remove Contact
+  Future<Map<String, dynamic>> removeContact(int uid, int foe_id) async {
+    final url = Uri.parse('$baseUrl/remove');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'uid': uid, 'foeUid': foe_id}),
+      );
+      return _processResponse(response);
+    } catch (e) {
+      return {'status': false, 'error': e.toString()};
+    }
+  }
+
   // Show their requests
   Future<Map<String, dynamic>> showTheirRequests(int uid) async {
     final url = Uri.parse('$baseUrl/theirrequest');

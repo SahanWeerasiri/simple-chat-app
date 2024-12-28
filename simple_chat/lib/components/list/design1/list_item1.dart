@@ -11,19 +11,22 @@ class ListItem1 extends StatelessWidget {
   final double shadowBlurRadius;
   final bool needArrow;
   final IconData icon;
+  final IconData icon2;
   final Function() onPressed;
-  const ListItem1(
-      {super.key,
-      this.height = 10,
-      this.color = Colors.greenAccent,
-      this.padding = 2,
-      this.borderRadius = 2,
-      this.textColor = Colors.black,
-      required this.title,
-      required this.icon,
-      required this.onPressed,
-      this.needArrow = true,
-      this.shadowBlurRadius = 10});
+  const ListItem1({
+    super.key,
+    this.height = 10,
+    this.color = Colors.greenAccent,
+    this.padding = 2,
+    this.borderRadius = 2,
+    this.textColor = Colors.black,
+    required this.title,
+    required this.icon,
+    required this.onPressed,
+    this.icon2 = Icons.arrow_forward,
+    this.needArrow = true,
+    this.shadowBlurRadius = 10,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class ListItem1 extends StatelessWidget {
                   Text(title, style: TextStyle(color: textColor)),
                   IconButton(
                       onPressed: onPressed,
-                      icon: Icon(Icons.arrow_forward, color: textColor)),
+                      icon: Icon(icon2, color: textColor)),
                 ],
               )
             : InkWell(

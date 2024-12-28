@@ -28,6 +28,7 @@ class List1 extends StatelessWidget {
                 padding: padding,
                 borderRadius: borderRadius,
                 color: color,
+                icon2: entry.icon2,
               ))
           .toList(),
     );

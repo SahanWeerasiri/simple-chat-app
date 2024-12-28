@@ -58,6 +58,20 @@ const responseRequest = async(req,res)=>{
     }
 };
 
+const removeContact = async(req,res)=>{
+    try {
+        console.log("Removing a contact...")
+        const {result} = await contactModel.removeContact(req.body);
+        console.log(result)
+        res.status(200).json({
+            msg: "Removing a contact successful",
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message });
+    }
+};
+
 const showMyRequests = async(req,res)=>{
     try {
         console.log("Getting my requests...")
@@ -95,5 +109,6 @@ module.exports = {
     showMyRequests,
     showTheirRequests,
     getAllContacts,
-    getMyContacts    
+    getMyContacts,
+    removeContact  
 };

@@ -6,6 +6,7 @@ import 'package:simple_chat/pages/app/additional/chat_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chat/api/chat_api.dart';
 import 'package:simple_chat/api/group_api.dart';
+import 'package:simple_chat/api/contacts_api.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -19,8 +20,11 @@ class _ChatScreenState extends State<ChatScreen> {
   late int uid;
   late int friendUid;
   late int groupId;
+  String groupName = "";
+  String groupImg = "";
   late bool isGroup;
   bool _isLoading = true; // Loading state
+  List<IconButton> _actions = [];
   final CredentialController credentialController = CredentialController();
 
   @override
@@ -46,6 +50,8 @@ class _ChatScreenState extends State<ChatScreen> {
       isGroup = arguments['is_group'];
       if (isGroup) {
         groupId = arguments['group_id'];
+        groupName = arguments['group_name'];
+        groupImg = arguments['group_img'];
         friendUid = 0;
       } else {
         friendUid = arguments['friend_uid'];
@@ -56,10 +62,45 @@ class _ChatScreenState extends State<ChatScreen> {
     if (isGroup) {
       setState(() {
         _fetchGroupChats();
+        _actions = [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/group/add-members',
+                    arguments: {'uid': uid, 'group_id': groupId});
+              },
+              icon: const Icon(
+                Icons.group_add,
+                color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/group/info', arguments: {
+                  'group_id': groupId,
+                  'uid': uid,
+                  'group_name': groupName,
+                  'group_img': groupImg
+                });
+              },
+              icon: const Icon(
+                Icons.info,
+                color: Colors.white,
+              ))
+        ];
       });
     } else {
       setState(() {
         _fetchChats();
+        _actions = [
+          IconButton(
+              onPressed: () {
+                onRemove();
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.remove_circle,
+                color: Colors.white,
+              )),
+        ];
       });
     }
   }
@@ -158,7 +199,29 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void onRemove() {}
+  void onRemove() async {
+    Map<String, dynamic> res =
+        await ContactApiService().removeContact(uid, friendUid);
+    if (res['status']) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res['messege']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res['error']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,15 +236,7 @@ class _ChatScreenState extends State<ChatScreen> {
         backButton: false,
         backgroundColor: CustomColors().blue,
         titleColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.delete,
-              color: Colors.red,
-            ),
-            onPressed: () => {onRemove()},
-          )
-        ],
+        actions: _actions,
       ),
       body: SafeArea(
         child: Column(
