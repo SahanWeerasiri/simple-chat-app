@@ -27,7 +27,7 @@ class List1 extends StatelessWidget {
                 height: height,
                 padding: padding,
                 borderRadius: borderRadius,
-                color: color,
+                color: entry.color ?? color,
                 icon2: entry.icon2,
               ))
           .toList(),

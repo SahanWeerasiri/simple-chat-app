@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
         Chat(uid: uid),
         Status(uid: uid),
         Groups(uid: uid),
-        const Profile(),
+        Profile(uid: uid),
         const Settings()
       ];
     });

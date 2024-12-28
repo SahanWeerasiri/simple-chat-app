@@ -346,7 +346,7 @@ CREATE PROCEDURE show_my_request(
 	IN p_uid INT
 )
 BEGIN
-	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON reciver_id = uid WHERE sender_id = p_uid;
+	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON reciver_id = uid WHERE sender_id = p_uid ORDER BY time_stamp DESC;
 END $$
 DELIMITER ;
 
@@ -356,7 +356,7 @@ CREATE PROCEDURE show_their_request(
 	IN p_uid INT
 )
 BEGIN
-	SELECT request_id,u_name,img,state,time_stamp FROM request INNER JOIN u_profile ON sender_id = uid WHERE reciver_id = p_uid;
+	SELECT request_id,u_name,img,state,time_stamp,sender_id FROM request INNER JOIN u_profile ON sender_id = uid WHERE reciver_id = p_uid ORDER BY time_stamp DESC;
 END $$
 DELIMITER ;
 

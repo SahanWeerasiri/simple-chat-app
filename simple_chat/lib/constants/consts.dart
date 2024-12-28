@@ -104,3 +104,25 @@ class StatusDetails {
   StatusDetails(
       {required this.name, required this.statusId, required this.messege});
 }
+
+class Request {
+  final String name;
+  final int requestId;
+  final String img;
+  final String state;
+  final String timestamp;
+  final int senderId;
+  Request(
+      {required this.name,
+      required this.requestId,
+      required this.timestamp,
+      required this.state,
+      required this.img,
+      this.senderId = 0});
+}
+
+class MyProfile {
+  final String name;
+  final int uid;
+  MyProfile({required this.uid, required this.name});
+}
