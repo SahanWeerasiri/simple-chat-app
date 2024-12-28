@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   late final TextStyle textStyleTextInputTopic;
   late final TextStyle textStyleInputField;
   String msg = "";
-  int uid = 0;
+  late int uid;
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class _LoginState extends State<Login> {
         fontSize: 15,
         fontWeight: FontWeight.bold);
     msg = "";
-    uid = 0;
   }
 
   Future<bool> checkCredentials() async {
@@ -43,7 +42,7 @@ class _LoginState extends State<Login> {
 
     if (result['status'] == true) {
       setState(() {
-        uid = int.fromEnvironment(result['data'].toString());
+        uid = result['data'];
       });
       return true;
     } else {

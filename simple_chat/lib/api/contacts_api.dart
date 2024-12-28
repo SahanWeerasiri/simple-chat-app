@@ -105,7 +105,7 @@ class ContactApiService {
         'messege': jsonDecode(response.body)['msg']
       };
     } else {
-      throw Exception('Failed API Call: ${response.body}');
+      return {'status': false, 'error': (jsonDecode(response.body)['error'])};
     }
   }
 }

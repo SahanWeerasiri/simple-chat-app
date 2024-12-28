@@ -31,8 +31,8 @@ class _ChatState extends State<Chat> {
         List<ContactDetails> contacts = (map['data'] as List).map((element) {
           return ContactDetails(
             uid: element['uid'],
-            name: element['name'],
-            img: element['avatar'],
+            name: element['u_name'],
+            img: element['img'],
           );
         }).toList();
         setState(() {

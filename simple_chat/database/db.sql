@@ -236,7 +236,7 @@ CREATE PROCEDURE get_all_contacts(
 	IN p_uid INT
 )
 BEGIN
-	SELECT * FROM u_profile WHERE NOT(uid = p_uid); 
+	SELECT * FROM u_profile WHERE (NOT(uid = p_uid)) AND ((uid NOT IN (SELECT uid_1 FROM connect WHERE uid_2=p_uid)) AND (uid NOT IN (SELECT uid_2 FROM connect WHERE uid_1=p_uid))); 
 END $$
 DELIMITER ;
 

@@ -191,7 +191,8 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/add_contact");
+                Navigator.pushNamed(context, "/add_contact",
+                    arguments: {'uid': uid});
               },
               icon: const Icon(Icons.add, color: Colors.white)),
           IconButton(
