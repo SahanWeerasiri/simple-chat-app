@@ -101,9 +101,13 @@ class GroupApiService {
   // Helper function to process response
   Map<String, dynamic> _processResponse(http.Response response) {
     if (response.statusCode == 200) {
-      return {'status': true, 'data': jsonDecode(response.body)};
+      return {
+        'status': true,
+        'data': jsonDecode(response.body),
+        'messege': jsonDecode(response.body)['msg']
+      };
     } else {
-      throw Exception('Failed API Call: ${response.body}');
+      throw Exception(jsonDecode(response.body)['error']);
     }
   }
 }

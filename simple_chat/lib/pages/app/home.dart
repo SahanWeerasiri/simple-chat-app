@@ -197,6 +197,12 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.add, color: Colors.white)),
           IconButton(
               onPressed: () {
+                Navigator.pushNamed(context, "/create_group",
+                    arguments: {'uid': uid});
+              },
+              icon: const Icon(Icons.group, color: Colors.white)),
+          IconButton(
+              onPressed: () {
                 logout();
               },
               icon: const Icon(

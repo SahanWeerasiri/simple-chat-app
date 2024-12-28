@@ -1,5 +1,6 @@
 import 'package:simple_chat/pages/app/home.dart';
 import 'package:simple_chat/pages/app/pages/add_contact.dart';
+import 'package:simple_chat/pages/app/pages/add_group.dart';
 import 'package:simple_chat/pages/app/pages/chat.dart';
 import 'package:simple_chat/pages/app/pages/chat_screen.dart';
 import 'package:simple_chat/pages/app/pages/groups.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const Settings(),
         '/profile': (context) => const Profile(),
         '/chat_screen': (context) => const ChatScreen(),
+        '/create_group': (context) => const AddGroup(),
       },
     );
   }
