@@ -99,7 +99,11 @@ class ContactApiService {
   // Helper function to process response
   Map<String, dynamic> _processResponse(http.Response response) {
     if (response.statusCode == 200) {
-      return {'status': true, 'data': jsonDecode(response.body)};
+      return {
+        'status': true,
+        'data': jsonDecode(response.body)['data'],
+        'messege': jsonDecode(response.body)['msg']
+      };
     } else {
       throw Exception('Failed API Call: ${response.body}');
     }

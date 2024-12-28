@@ -89,3 +89,10 @@ class DrawerItems {
 }
 
 const String BASE = "http://192.168.137.215:3000";
+
+class ContactDetails {
+  final String name;
+  final int uid;
+  final String img;
+  ContactDetails({required this.name, required this.uid, required this.img});
+}

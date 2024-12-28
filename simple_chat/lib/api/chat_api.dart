@@ -20,7 +20,11 @@ class ChatApiService {
       );
 
       if (response.statusCode == 200) {
-        return {'status': true, 'data': jsonDecode(response.body)};
+        return {
+          'status': true,
+          'data': jsonDecode(response.body)['data'],
+          'message': jsonDecode(response.body)['msg']
+        };
       } else {
         throw Exception('Failed to send msg: ${response.body}');
       }

@@ -19,13 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _pages = const [
-    Chat(),
-    Status(),
-    Groups(),
-    Profile(),
-    Settings()
-  ];
+  List<Widget> _pages = [];
   DrawerIndexController drawerIndexController = DrawerIndexController();
   int _selectedIndex = 0; // Add state variable to track selected index
   late int uid;
@@ -42,13 +36,27 @@ class _HomeState extends State<Home> {
     logoutOpend = false;
   }
 
+  void _getUID() {
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    setState(() {
+      uid = arguments['uid'];
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Extract arguments here
-    final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    uid = arguments['uid'];
+    _getUID();
+    setState(() {
+      _pages = [
+        Chat(uid: uid),
+        const Status(),
+        const Groups(),
+        const Profile(),
+        const Settings()
+      ];
+    });
   }
 
   Future<void> logoutService() async {
