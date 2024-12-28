@@ -411,7 +411,7 @@ BEGIN
     IF p_type = "Single" THEN
 		INSERT INTO single_chat(chat_id,reciver_id) VALUES (v_chat_id,p_friend_uid);
 	ELSE
-		INSERT INTO group_chat(chat_id,reciver_id) VALUES (v_chat_id,p_friend_uid);
+		INSERT INTO group_chat(chat_id,group_id) VALUES (v_chat_id,p_friend_uid);
 	END IF;
     
     COMMIT;
@@ -507,8 +507,8 @@ BEGIN
         
 	SELECT sender_id,time_stamp,messege,u_name FROM 
 	((chat_history INNER JOIN group_chat ON chat_history.chat_id = group_chat.chat_id) 
-	INNER JOIN u_profile ON sender_id = uid )
-	WHERE group_id = p_group_id;
+	INNER JOIN u_profile ON sender_id = uid ) INNER JOIN msg ON msg.msg_id = chat_history.msg_id
+	WHERE group_id = p_group_id ORDER BY time_stamp ASC;
 
     COMMIT;
 END $$

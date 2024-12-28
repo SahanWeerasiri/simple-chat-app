@@ -103,7 +103,7 @@ class GroupApiService {
     if (response.statusCode == 200) {
       return {
         'status': true,
-        'data': jsonDecode(response.body),
+        'data': jsonDecode(response.body)['data'],
         'messege': jsonDecode(response.body)['msg']
       };
     } else {

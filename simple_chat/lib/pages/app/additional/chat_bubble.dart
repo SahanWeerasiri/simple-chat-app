@@ -78,7 +78,10 @@ class ChatBubble extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  chatModel.timestamp.split("T").last,
+                                  chatModel.timestamp
+                                      .split('.')
+                                      .first
+                                      .replaceAll('T', "_"),
                                   style: TextStyle(
                                     color: chatModel.isSender
                                         ? Colors.white

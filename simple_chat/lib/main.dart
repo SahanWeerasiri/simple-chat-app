@@ -35,7 +35,9 @@ class MyApp extends StatelessWidget {
         '/chat': (context) => const Chat(
               uid: 0,
             ),
-        '/groups': (context) => const Groups(),
+        '/groups': (context) => const Groups(
+              uid: 0,
+            ),
         '/status': (context) => const Status(),
         '/add_contact': (context) => const AddContact(),
         '/settings': (context) => const Settings(),
