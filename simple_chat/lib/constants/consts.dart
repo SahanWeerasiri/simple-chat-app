@@ -96,3 +96,11 @@ class ContactDetails {
   final String img;
   ContactDetails({required this.name, required this.uid, required this.img});
 }
+
+class StatusDetails {
+  final String name;
+  final int statusId;
+  final String messege;
+  StatusDetails(
+      {required this.name, required this.statusId, required this.messege});
+}

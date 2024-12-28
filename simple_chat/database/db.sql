@@ -868,11 +868,11 @@ BEGIN
         SET MESSAGE_TEXT = 'You have not any contact';
     END IF;
     
-    -- Delete expired status
+     -- Delete expired status
     DELETE FROM state WHERE time_stamp < NOW() - INTERVAL 1 DAY;
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
-    SELECT messege,u_name,img FROM 
+    SELECT messege,u_name,state_id AS status_id FROM 
     ((state INNER JOIN msg ON state.msg_id = msg.msg_id)
     INNER JOIN u_profile ON state.uid = u_profile.uid) 
     WHERE state.uid IN (SELECT uid_1 FROM connect WHERE uid_2 = p_uid) OR state.uid IN (SELECT uid_2 FROM connect WHERE uid_1 = p_uid);
@@ -890,11 +890,11 @@ BEGIN
     
     START TRANSACTION;
     
-    -- Delete expired status
+     -- Delete expired status
     DELETE FROM state WHERE time_stamp < NOW() - INTERVAL 1 DAY;
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
-    SELECT messege,state_id FROM 
+    SELECT messege,state_id AS status_id FROM 
     state INNER JOIN msg ON state.msg_id = msg.msg_id
     WHERE state.uid = p_uid;
         
@@ -914,7 +914,7 @@ BEGIN
     
     DELETE FROM state WHERE state_id = p_status_id;
     
-    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state);
+    DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
     COMMIT;
 END $$

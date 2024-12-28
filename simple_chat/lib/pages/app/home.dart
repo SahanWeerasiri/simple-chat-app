@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _pages = [
         Chat(uid: uid),
-        const Status(),
+        Status(uid: uid),
         Groups(uid: uid),
         const Profile(),
         const Settings()

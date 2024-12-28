@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
         '/groups': (context) => const Groups(
               uid: 0,
             ),
-        '/status': (context) => const Status(),
+        '/status': (context) => const Status(
+              uid: 0,
+            ),
         '/add_contact': (context) => const AddContact(),
         '/settings': (context) => const Settings(),
         '/profile': (context) => const Profile(),
