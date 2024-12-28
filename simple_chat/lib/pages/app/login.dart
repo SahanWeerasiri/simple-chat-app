@@ -38,10 +38,8 @@ class _LoginState extends State<Login> {
   }
 
   Future<bool> checkCredentials() async {
-    Map<String, dynamic> result = await UserApiService().createUser(
-        credentialController.name,
-        credentialController.username,
-        credentialController.password);
+    Map<String, dynamic> result = await UserApiService()
+        .signIn(credentialController.username, credentialController.password);
 
     if (result['status'] == true) {
       setState(() {
@@ -141,7 +139,7 @@ class _LoginState extends State<Login> {
                   height: 5,
                 ),
                 InputFieldFb3(
-                    inputController: CredentialController(),
+                    inputController: credentialController,
                     hint: "Password",
                     icon: Icons.key,
                     hintColor: CustomColors().greyHint,
