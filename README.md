@@ -12,11 +12,9 @@ A simple chat application built with Flutter.
 
 ## Features
 
-- Real-time messaging
-- User authentication
-- Push notifications
 - Group chats
-- Media sharing (images, videos)
+- Status
+- Sending friend requests
 
 ## Installation
 
