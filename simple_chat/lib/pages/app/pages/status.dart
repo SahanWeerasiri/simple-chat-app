@@ -26,7 +26,8 @@ class _StatusState extends State<Status> {
   @override
   void initState() {
     super.initState();
-    _fetchStatus(); // Call a separate method without `await`
+    _fetchStatus();
+    _fetchMyStatus();
   }
 
   void _fetchStatus() async {
@@ -55,8 +56,26 @@ class _StatusState extends State<Status> {
       } else {
         throw Exception(map['error']);
       }
+    } catch (e) {
+      setState(() {
+        _isLoading = false; // Avoid infinite loading
+      });
+      // Show Snackbar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
+    }
+  }
+
+  void _fetchMyStatus() async {
+    try {
       Map<String, dynamic> map2 =
-          await StatusApiService().getStatus(widget.uid);
+          await StatusApiService().getMyStatus(widget.uid);
       if (map2['status']) {
         List<StatusDetails> status2 = (map2['data'] as List).map((element) {
           return StatusDetails(
@@ -105,7 +124,7 @@ class _StatusState extends State<Status> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(res['messege']),
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.green,
           ),
         );
       });

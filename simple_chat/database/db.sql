@@ -826,7 +826,7 @@ BEGIN
     
     SET v_msg_id = LAST_INSERT_ID();
     
-    INSERT INTO state(uid,msg_id) VALUES(p_uid,v_msg_id,CURRENT_TIMESTAMP);
+    INSERT INTO state(uid,msg_id,time_stamp) VALUES(p_uid,v_msg_id,CURRENT_TIMESTAMP);
     
     COMMIT;
 END $$
@@ -869,7 +869,7 @@ BEGIN
     END IF;
     
      -- Delete expired status
-    DELETE FROM state WHERE time_stamp < NOW() - INTERVAL 1 DAY;
+    DELETE FROM state WHERE time_stamp < (NOW() - INTERVAL 1 DAY);
     DELETE FROM msg WHERE msg_id NOT IN (SELECT msg_id FROM state) AND msg_id NOT IN (SELECT msg_id FROM chat_history);
     
     SELECT messege,u_name,state_id AS status_id FROM 

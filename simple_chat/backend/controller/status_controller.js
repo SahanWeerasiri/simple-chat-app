@@ -6,7 +6,7 @@ const addStatus = async(req,res)=>{
         const {result} = await statusModel.addStatus(req.body);
         console.log(result)
         res.status(200).json({
-            msg: "Adding status successful"
+            msg: "Adding status successful",data:[]
         });
     } catch (error) {
         console.log(error)
@@ -20,7 +20,7 @@ const deleteStatus = async(req,res)=>{
         const {result} = await statusModel.deleteStatus(req.body);
         console.log(result)
         res.status(200).json({
-            msg: "Deleting status successful"
+            msg: "Deleting status successful",data:[]
         });
     } catch (error) {
         console.log(error)
