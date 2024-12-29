@@ -8,8 +8,7 @@ A simple chat application built with Flutter.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
-
+  
 ## Features
 
 - Group chats
