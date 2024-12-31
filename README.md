@@ -29,6 +29,20 @@ A simple chat application built with Flutter.
     ```sh
     flutter pub get
     ```
+4. **Navigate to the backend project directory:**
+    ```sh
+    cd simple-chat-app
+    cd backend
+    ```
+5. **Install dependencies for the backend server:**
+    ```sh
+    npm i
+    ```
+6. **Build the mysql database:**
+    ```sh
+    cd simple-chat-app
+    cd database
+    ```
 
 ## Usage
 
@@ -40,6 +54,12 @@ A simple chat application built with Flutter.
 2. **Build for release:**
     ```sh
     flutter build apk
+    ```
+3. **Run the server:**
+    ```sh
+    cd simple-chat-app
+    cd backend
+    node server.js
     ```
 
 ## Contributing
